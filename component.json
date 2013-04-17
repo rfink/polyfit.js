@@ -1,0 +1,15 @@
+{
+  "name": "polyfit",
+  "version": "0.0.1",
+  "description": "polynomial library",
+  "main": "index.js",
+  "dependencies": {
+    "component/underscore": "*"
+  },
+  "scripts": [
+    "index.js"
+  ],
+  "repository": "https://github.com/rfink/polyfit.js",
+  "author": "Ryan Fink",
+  "license": "GNU"
+}
