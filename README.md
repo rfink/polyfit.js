@@ -17,7 +17,6 @@ and get the corresponding y value (the parameter is the number of degrees)
   var Polyfit = require('polyfit');
   var poly = new Polyfit([ 1, 2, 3, 4, 5 ], [ 0.01, 0.03, -0.02, 0.03, 0.02 ]);
   var solver = poly.getPolynomial(6);
-
 ```
 
 Solver will be a function that you can call with an x value.
@@ -25,7 +24,6 @@ Solver will be a function that you can call with an x value.
 ```javascript
 
   console.log(solver(1.17));
-
 ```
 
 Computing coefficient terms:
@@ -33,7 +31,6 @@ Computing coefficient terms:
 ```javascript
 
   var terms = poly.computeCoefficients(6);
-
 ```
 
 Use those terms to get a standard error:
@@ -41,7 +38,6 @@ Use those terms to get a standard error:
 ```javascript
 
   var standardError = poly.standardError(terms);
-
 ```
 
 Or to get a correlation coefficient
@@ -49,7 +45,6 @@ Or to get a correlation coefficient
 ```javascript
 
   var cc = poly.correlationCoefficient(terms);
-
 ```
 
 License
