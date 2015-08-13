@@ -17,8 +17,8 @@
       "url": "http://github.com/rfink/polyfit.js/raw/master/LICENSE"
     }
   ],
-  "dependencies": {
-    "underscore": "1.4.4"
+  "scripts": {
+	"test": "mocha"
   },
   "devDependencies": {
     "should": "*",
