@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"noImplicitAny": true
+	},
+	"files": [
+		"index.ts"
+	],
+	"rules": {
+		"semicolon": true,
+		"quotemark": "single",
+		"curly": true,
+		"triple-equals": true
+	}
+}

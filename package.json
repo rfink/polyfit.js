@@ -19,11 +19,14 @@
   ],
   "scripts": {
     "test": "mocha",
-    "build": "tsc index.ts --module commonjs"
+    "build": "tslint --config tsconfig.json index.ts && tsc && jshint index.js"
   },
   "devDependencies": {
-    "should": "*",
-    "mocha": "*"
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5",
+    "should": "^7.1.0",
+    "tslint": "^2.4.5",
+    "typescript": "^1.5.3"
   },
   "engine": "node >= 0.6.0"
 }

@@ -1,15 +1,16 @@
-"use strict";
+'use strict';
 var Polyfit = (function () {
     /**
      * Polyfit
-     * @class
+     * @constructor
      * @param {number[]|Float32Array|Float64Array} x
      * @param {number[]|Float32Array|Float64Array} y
      */
     function Polyfit(x, y) {
         // Make sure we return an instance
-        if (!(this instanceof Polyfit))
+        if (!(this instanceof Polyfit)) {
             return new Polyfit(x, y);
+        }
         // Check that x any y are both arrays of the same type
         if (!((x instanceof Array && y instanceof Array) ||
             (x instanceof Float32Array && y instanceof Float32Array) ||
@@ -32,7 +33,7 @@ var Polyfit = (function () {
     /**
      * Perform gauss-jordan division
      *
-     * @param {number[][]|Float32Array[]|Float64Array[]} matrix - is getting modified
+     * @param {number[][]|Float32Array[]|Float64Array[]} matrix - gets modified
      * @param {number} row
      * @param {number} col
      * @param {number} numCols
@@ -44,11 +45,10 @@ var Polyfit = (function () {
         }
         matrix[row][col] = 1;
     };
-    ;
     /**
      * Perform gauss-jordan elimination
      *
-     * @param {number[][]|Float64Array[]} matrix - is getting modified
+     * @param {number[][]|Float64Array[]} matrix - gets modified
      * @param {number} row
      * @param {number} col
      * @param {number} numRows
@@ -57,7 +57,7 @@ var Polyfit = (function () {
      */
     Polyfit.gaussJordanEliminate = function (matrix, row, col, numRows, numCols) {
         for (var i = 0; i < numRows; i++) {
-            if (i != row && matrix[i][col] !== 0) {
+            if (i !== row && matrix[i][col] !== 0) {
                 for (var j = col + 1; j < numCols; j++) {
                     matrix[i][j] -= matrix[i][col] * matrix[row][j];
                 }
@@ -65,11 +65,10 @@ var Polyfit = (function () {
             }
         }
     };
-    ;
     /**
      * Perform gauss-jordan echelon method
      *
-     * @param {number[][]|Float32Array[]|Float64Array[]} matrix - is getting modified
+     * @param {number[][]|Float32Array[]|Float64Array[]} matrix - gets modified
      * @returns {number[][]|Float32Array[]|Float64Array[]} matrix
      */
     Polyfit.gaussJordanEchelonize = function (matrix) {
@@ -88,13 +87,13 @@ var Polyfit = (function () {
             // If an entry is found at row k
             if (k < rows) {
                 // If k is not i, then swap row i with row k
-                if (k != i) {
+                if (k !== i) {
                     swap = matrix[i];
                     matrix[i] = matrix[k];
                     matrix[k] = swap;
                 }
                 // If matrix[i][j] is != 1, divide row i by matrix[i][j]
-                if (matrix[i][j] != 1) {
+                if (matrix[i][j] !== 1) {
                     Polyfit.gaussJordanDivide(matrix, i, j, cols);
                 }
                 // Eliminate all other non-zero entries
@@ -105,7 +104,6 @@ var Polyfit = (function () {
         }
         return matrix;
     };
-    ;
     /**
      * Perform regression
      *
@@ -121,7 +119,6 @@ var Polyfit = (function () {
         }
         return a;
     };
-    ;
     /**
      * Compute correlation coefficient
      *
@@ -153,7 +150,6 @@ var Polyfit = (function () {
         }
         return r;
     };
-    ;
     /**
      * Run standard error function
      *
@@ -172,7 +168,6 @@ var Polyfit = (function () {
         }
         return r;
     };
-    ;
     /**
      * Compute coefficients for given data matrix
      *
@@ -189,19 +184,21 @@ var Polyfit = (function () {
         // Initialize array with 0 values
         if (this.FloatXArray) {
             // fast FloatXArray-Matrix init
-            var bytes_per_row = (p + 1) * this.FloatXArray.BYTES_PER_ELEMENT;
-            var buffer = new ArrayBuffer(p * bytes_per_row);
+            var bytesPerRow = (p + 1) * this.FloatXArray.BYTES_PER_ELEMENT;
+            var buffer = new ArrayBuffer(p * bytesPerRow);
             for (i = 0; i < p; i++) {
-                m[i] = new this.FloatXArray(buffer, i * bytes_per_row, p + 1);
+                m[i] = new this.FloatXArray(buffer, i * bytesPerRow, p + 1);
             }
         }
         else {
-            for (i = 0; i < p; i++) {
-                var mm = [];
-                for (var j = 0; j <= p; j++) {
-                    mm[j] = 0;
-                }
-                m[i] = mm;
+            var zeroRow = [];
+            for (i = 0; i <= p; i++) {
+                zeroRow[i] = 0;
+            }
+            m[0] = zeroRow;
+            for (i = 1; i < p; i++) {
+                // copy zeroRow
+                m[i] = zeroRow.slice();
             }
         }
         var mpc = [n];
@@ -234,16 +231,17 @@ var Polyfit = (function () {
         }
         return terms;
     };
-    ;
     /**
-     * Using given degree of fitment, return a function that will calculate the y for a given x
+     * Using given degree of fitment, return a function that will calculate
+     * the y for a given x
      *
      * @param {number} degree
      * @returns {Function}
      */
     Polyfit.prototype.getPolynomial = function (degree) {
-        if (isNaN(degree) || degree < 0)
+        if (isNaN(degree) || degree < 0) {
             throw new Error('Degree must be a positive integer');
+        }
         var terms = this.computeCoefficients(degree);
         var eqParts = [];
         eqParts.push(terms[0].toPrecision());
@@ -251,18 +249,21 @@ var Polyfit = (function () {
             eqParts.push(terms[i] + ' * Math.pow(x, ' + i + ')');
         }
         var expr = 'return ' + eqParts.join(' + ') + ';';
+        /* jshint evil: true */
         return new Function('x', expr);
+        /* jshint evil: false */
     };
-    ;
     /**
-     * Convert the polynomial to a string expression, mostly useful for visual debugging
+     * Convert the polynomial to a string expression, mostly useful for visual
+     * debugging
      *
      * @param {number} degree
      * @returns {string}
      */
     Polyfit.prototype.toExpression = function (degree) {
-        if (isNaN(degree) || degree < 0)
+        if (isNaN(degree) || degree < 0) {
             throw new Error('Degree must be a positive integer');
+        }
         var terms = this.computeCoefficients(degree);
         var eqParts = [];
         var len = terms.length;
