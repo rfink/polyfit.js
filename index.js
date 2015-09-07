@@ -235,8 +235,8 @@ var Polyfit = (function () {
      * Using given degree of fitment, return a function that will calculate
      * the y for a given x
      *
-     * @param {number} degree
-     * @returns {Function}
+     * @param {number} degree  > 0
+     * @returns {Function}     f(x) =
      */
     Polyfit.prototype.getPolynomial = function (degree) {
         if (isNaN(degree) || degree < 0) {

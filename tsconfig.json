@@ -10,6 +10,7 @@
 		"semicolon": true,
 		"quotemark": "single",
 		"curly": true,
-		"triple-equals": true
+		"triple-equals": true,
+		"no-any": true
 	}
 }

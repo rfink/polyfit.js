@@ -8,7 +8,8 @@
 interface NumberArrayConstructor {
     new (length: number): NumberArray;
     new (buffer: ArrayBuffer, byteOffset?: number, length?: number): NumberArray;
-    BYTES_PER_ELEMENT: number;
+    
+    BYTES_PER_ELEMENT?: number;
 }
 
 interface NumberArray {
@@ -17,11 +18,10 @@ interface NumberArray {
 }
 
 export = Polyfit;
-class Polyfit<T extends NumberArray> {
-    private x: T;
-    private y: T;
-    private FloatXArray: NumberArrayConstructor;
-    private BYTES_PER_ELEMENT: number;
+class Polyfit {
+    private x: NumberArray;
+    private y: NumberArray;
+    private FloatXArray: Float32ArrayConstructor|Float64ArrayConstructor;
 
     /**
      * Polyfit
@@ -30,8 +30,8 @@ class Polyfit<T extends NumberArray> {
      * @param {number[]|Float32Array|Float64Array} y
      */
     constructor(
-        x : T,
-        y : T
+        x : NumberArray,
+        y : NumberArray
     ) {
 
         // Make sure we return an instance
@@ -72,8 +72,8 @@ class Polyfit<T extends NumberArray> {
      * @param {number} numCols
      * @returns void
      */
-    static gaussJordanDivide<T extends NumberArray>(
-        matrix  : T[],
+    static gaussJordanDivide(
+        matrix  : NumberArray[],
         row     : number,
         col     : number,
         numCols : number
@@ -97,8 +97,8 @@ class Polyfit<T extends NumberArray> {
      * @param {number} numCols
      * @returns void
      */
-    static gaussJordanEliminate<T extends NumberArray>(
-        matrix  : T[],
+    static gaussJordanEliminate(
+        matrix  : NumberArray[],
         row     : number,
         col     : number,
         numRows : number,
@@ -122,16 +122,16 @@ class Polyfit<T extends NumberArray> {
      * @param {number[][]|Float32Array[]|Float64Array[]} matrix - gets modified
      * @returns {number[][]|Float32Array[]|Float64Array[]} matrix
      */
-    static gaussJordanEchelonize<T extends NumberArray>(
-        matrix: T[]
-    ): T[] {
+    static gaussJordanEchelonize(
+        matrix: NumberArray[]
+    ): NumberArray[] {
 
         const rows = matrix.length;
         const cols = matrix[0].length;
         var i = 0;
         var j = 0;
         var k: number;
-        var swap: T;
+        var swap: NumberArray;
 
         while (i < rows && j < cols) {
             k = i;
@@ -169,9 +169,9 @@ class Polyfit<T extends NumberArray> {
      * @param {number[]|Float32Array[]|Float64Array[]} terms
      * @returns {number}
      */
-    static regress<T extends NumberArray>(
+    static regress(
         x     : number,
-        terms : T
+        terms : NumberArray
     ): number {
 
         var a = 0;
@@ -192,7 +192,7 @@ class Polyfit<T extends NumberArray> {
      * @returns {number}
      */
     public correlationCoefficient(
-        terms : T
+        terms : NumberArray
     ): number {
 
         var r = 0;
@@ -232,7 +232,7 @@ class Polyfit<T extends NumberArray> {
      * @returns number
      */
     public standardError(
-        terms : T
+        terms : NumberArray
     ): number {
 
         var r = 0;
@@ -258,7 +258,7 @@ class Polyfit<T extends NumberArray> {
      */
     public computeCoefficients(
         p : number
-    ): T {
+    ): NumberArray {
 
         const n = this.x.length;
         let r: number;
@@ -266,7 +266,7 @@ class Polyfit<T extends NumberArray> {
         const rs = 2 * (++p) - 1;
         let i: number;
 
-        var m: any[] = [];
+        var m: NumberArray[] = [];
 
         // Initialize array with 0 values
         if (this.FloatXArray) {
@@ -316,16 +316,16 @@ class Polyfit<T extends NumberArray> {
             }
         }
 
-        Polyfit.gaussJordanEchelonize<T>(m);
+        Polyfit.gaussJordanEchelonize(m);
 
-        var terms: NumberArray =
-            this.FloatXArray && <T>new this.FloatXArray(m.length) || [];
+        var terms =
+            this.FloatXArray && new this.FloatXArray(m.length) || <NumberArray>[];
 
         for (i = m.length - 1; i >= 0; i--) {
             terms[i] = m[i][p];
         }
 
-        return <T>terms;
+        return terms;
 
     }
 
@@ -333,12 +333,12 @@ class Polyfit<T extends NumberArray> {
      * Using given degree of fitment, return a function that will calculate
      * the y for a given x
      * 
-     * @param {number} degree
-     * @returns {Function}
+     * @param {number} degree  > 0
+     * @returns {Function}     f(x) = 
      */
     public getPolynomial(
         degree : number
-    ): Function /* (x: number) => number */ {
+    ): (x: number) => number {
 
         if (isNaN(degree) || degree < 0) {
             throw new Error('Degree must be a positive integer');
@@ -356,7 +356,7 @@ class Polyfit<T extends NumberArray> {
         var expr = 'return ' + eqParts.join(' + ') + ';';
 
         /* jshint evil: true */
-        return new Function('x', expr);
+        return <(x: number) => number>new Function('x', expr);
         /* jshint evil: false */
 
     }
