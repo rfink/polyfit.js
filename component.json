@@ -3,9 +3,6 @@
   "version": "0.0.1",
   "description": "polynomial library",
   "main": "index.js",
-  "dependencies": {
-    "component/underscore": "*"
-  },
   "scripts": [
     "index.js"
   ],

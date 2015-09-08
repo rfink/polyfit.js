@@ -1,0 +1,17 @@
+{
+  "camelcase" : true,
+  "indent": 2,
+  "undef": true,
+  "quotmark": "single",
+  "maxlen": 90,
+  "trailing": true,
+  "curly": true,
+  "globalstrict": true,
+  "asi": false,
+  "globals": {
+    "ArrayBuffer": false,
+    "Float32Array": false,
+    "Float64Array": false,
+    "module": false
+  }
+}
