@@ -6,6 +6,8 @@ Polynomial fitment solver library for node.js
 Heavily, heavily inspired by Paul Lutus (lutusp@arachnoid.com) - http://www.arachnoid.com/polysolve
 This was just a way to node-ize / component-ize this library, and format it a little better.
 
+Copyright © 2023, P. Lutus and Ryan Fink. Released under the GPL https://www.gnu.org/licenses/gpl-3.0.en.html
+
 Usage
 ============
 
