@@ -1,4 +1,7 @@
 'use strict';
+
+// Copyright © 2023, P. Lutus and Ryan Fink. Released under the GPL https://www.gnu.org/licenses/gpl-3.0.en.html
+
 var Polyfit = (function () {
     /**
      * Polyfit
